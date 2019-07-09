@@ -3,6 +3,7 @@ using board.engine.Actions;
 using board.engine.Movement;
 using board.engine.tests.utils;
 using NUnit.Framework;
+using Shouldly;
 
 namespace board.engine.tests.Movement
 {
@@ -21,7 +22,7 @@ namespace board.engine.tests.Movement
         {
             foreach (ChessMoveTypes type in Enum.GetValues(typeof(DefaultActions)))
             {
-                Assert.DoesNotThrow(() => _provider.Create((int)type, null), $"{type} is not support");
+                Should.NotThrow(()=> _provider.Create((int)type, null), $"{type} is not support");
             }
         }
     }
