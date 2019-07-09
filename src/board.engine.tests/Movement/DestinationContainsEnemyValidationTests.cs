@@ -3,6 +3,7 @@ using board.engine.Movement;
 using board.engine.Movement.Validators;
 using board.engine.tests.utils;
 using NUnit.Framework;
+using Shouldly;
 
 namespace board.engine.tests.Movement
 {
@@ -27,7 +28,7 @@ namespace board.engine.tests.Movement
             SetupFromEntity(move, new TestBoardEntity());
             SetupToEntity(move, new TestBoardEntity(Enemy));
 
-            Assert.True(_validator.ValidateMove(move, RoBoardStateMock.Object));
+            _validator.ValidateMove(move, RoBoardStateMock.Object).ShouldBeTrue();
         }
 
         [Test]
@@ -39,7 +40,7 @@ namespace board.engine.tests.Movement
             SetupFromEntity(move, new TestBoardEntity());
             SetupToEntity(move, new TestBoardEntity());
 
-            Assert.False(_validator.ValidateMove(move, RoBoardStateMock.Object));
+            _validator.ValidateMove(move, RoBoardStateMock.Object).ShouldBeFalse();
         }
 
         [Test]
@@ -51,7 +52,7 @@ namespace board.engine.tests.Movement
             SetupFromEntity(move, new TestBoardEntity());
             SetupToEntity(move);
 
-            Assert.False(_validator.ValidateMove(move, RoBoardStateMock.Object));
+            _validator.ValidateMove(move, RoBoardStateMock.Object).ShouldBeFalse();
         }
     }
 }

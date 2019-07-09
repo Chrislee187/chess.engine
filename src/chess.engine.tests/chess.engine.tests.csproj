@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk;Microsoft.NET.Sdk.Publish">
+﻿<Project Sdk="Microsoft.NET.Sdk;Microsoft.NET.Sdk.Publish">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -26,8 +26,5 @@
     <None Update="Settings.job">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Serialisation\" />
   </ItemGroup>
 </Project>
