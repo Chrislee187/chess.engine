@@ -52,7 +52,7 @@ namespace chess.engine.tests.Movement.Pawn
                 .SetupEnpassantFriendlyPawnValid(true, Friend)
                 .SetupEnpassantEnemyPawnValid(true);
 
-            _validator.ValidateMove(AnyBoardMove, null).ShouldBeFalse();
+            _validator.ValidateMove(AnyBoardMove, null).ShouldBeTrue();
         }
     }
 }
