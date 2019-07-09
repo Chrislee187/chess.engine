@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using board.engine;
 using board.engine.Board;
@@ -8,6 +9,7 @@ using chess.engine.Game;
 using chess.engine.tests.Builders;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 
 namespace chess.engine.tests.Game
@@ -64,7 +66,7 @@ namespace chess.engine.tests.Game
             SetupCheckState(whiteState, Colours.White);
             SetupCheckState(blackState, Colours.Black);
 
-            Assert.That(service.Check(_boardStateMock.Object), Is.EqualTo(expectedGameState));
+            service.Check(_boardStateMock.Object).ShouldBe(expectedGameState);
         }
 
         [Test]
@@ -82,7 +84,7 @@ namespace chess.engine.tests.Game
             SetupCheckState(PlayerState.Check, Colours.White);
             SetupCheckState(PlayerState.Checkmate, Colours.Black);
 
-            Assert.That(() => service.Check(_boardStateMock.Object), Throws.Exception);
+            Should.Throw<Exception>(() => service.Check(_boardStateMock.Object));
         }
         private void SetupCheckState(PlayerState inProgress, Colours colours)
         {

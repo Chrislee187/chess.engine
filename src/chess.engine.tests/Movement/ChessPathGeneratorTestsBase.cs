@@ -6,7 +6,7 @@ using chess.engine.Entities;
 using chess.engine.Game;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement
 {
@@ -15,8 +15,11 @@ namespace chess.engine.tests.Movement
         protected Mock<IBoardState<ChessPieceEntity>> BoardStateMock;
         protected Mock<ILogger> LoggerMock;
 
-        protected void AssertPathContains(IEnumerable<Path> paths, Path path, Colours colour)
-            => Assert.That(paths.Contains(path), $"{path} not found for {colour}, check MoveType!");
+        protected void PathsShouldContain(IEnumerable<Path> paths, Path path, Colours colour)
+        {
+            paths.Contains(path).ShouldBeTrue();
+
+        }
 
         protected void SetUp()
         {

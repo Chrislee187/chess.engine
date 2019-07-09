@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests
 {
@@ -19,7 +20,7 @@ namespace chess.engine.tests
                 }
             }
 
-            Assert.That(count, Is.GreaterThan(0), "No services resolved!");
+            count.ShouldBeGreaterThan(0);
         }
     }
 }

@@ -7,6 +7,7 @@ using chess.engine.Entities;
 using chess.engine.Extensions;
 using chess.engine.Game;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests
 {
@@ -40,11 +41,11 @@ namespace chess.engine.tests
 
             var piece = engine.BoardState.GetItem(startLocation);
 
-            Assert.That(piece.Item.Piece, Is.EqualTo(ChessPieceName.Pawn));
+            piece.Item.Piece.ShouldBe(ChessPieceName.Pawn);
 
             var paths = piece.Paths;
-            Assert.That(paths.Count(), Is.EqualTo(1));
-            Assert.That(paths.SelectMany(m => m).Count(), Is.EqualTo(2));
+            paths.Count().ShouldBe(1);
+            paths.SelectMany(m => m).Count().ShouldBe(2);
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace chess.engine.tests
 
             var msg = game.Move("c4b5");
 
-            Assert.IsEmpty(msg, msg);
+            msg.ShouldBeEmpty();
         }
     }
 }

@@ -6,6 +6,7 @@ using chess.engine.Game;
 using chess.engine.Movement.Pawn;
 using chess.engine.tests.Builders;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement.Pawn
 {
@@ -26,14 +27,15 @@ namespace chess.engine.tests.Movement.Pawn
             var boardLocation = "A2".ToBoardLocation();
             var whitePaths = _gen.PathsFrom(boardLocation, (int) Colours.White).ToList();
 
-            Assert.That(whitePaths.Count(), Is.EqualTo(1));
-            
+            whitePaths.Count().ShouldBe(1);
+
+
             var ep = new ChessPathBuilder().From("A2")
                 .To("A3")
                 .To("A4", (int) ChessMoveTypes.PawnTwoStep)
                 .Build();
 
-            AssertPathContains(whitePaths, ep, Colours.White);
+            PathsShouldContain(whitePaths, ep, Colours.White);
         }
 
         [Test]
@@ -41,12 +43,12 @@ namespace chess.engine.tests.Movement.Pawn
         {
             var startLocation = "A3".ToBoardLocation();
             var whitePaths = _gen.PathsFrom(startLocation, (int)Colours.White).ToList();
-            Assert.That(whitePaths.Count(), Is.EqualTo(1));
+            whitePaths.Count().ShouldBe(1);
 
             var ep = new ChessPathBuilder().From(startLocation)
                 .To("A4")
                 .Build();
-            AssertPathContains(whitePaths, ep, Colours.White);
+            PathsShouldContain(whitePaths, ep, Colours.White);
         }
 
 
@@ -55,12 +57,12 @@ namespace chess.engine.tests.Movement.Pawn
         {
             var startLocation = "A7".ToBoardLocation();
             var whitePaths = _gen.PathsFrom(startLocation, (int) Colours.White).ToList();
-            Assert.That(whitePaths.Count(), Is.EqualTo(4));
+            whitePaths.Count().ShouldBe(4);
 
 
             foreach (var chessPieceName in new[] { ChessPieceName.Knight, ChessPieceName.Bishop, ChessPieceName.Rook, ChessPieceName.Queen })
             {
-                AssertPathContains(whitePaths, new ChessPathBuilder().From(startLocation)
+                PathsShouldContain(whitePaths, new ChessPathBuilder().From(startLocation)
                     .ToUpdatePiece("A8", chessPieceName)
                     .Build(), Colours.White);
             }

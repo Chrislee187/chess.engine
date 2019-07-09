@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using board.engine.Actions;
 using board.engine.Movement;
@@ -10,6 +11,7 @@ using chess.engine.tests.Builders;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement
 {
@@ -44,7 +46,7 @@ namespace chess.engine.tests.Movement
 
             validator.ValidatePath(BoardStateMock.Object, path);
 
-            Assert.That(path.Any());
+            path.Any().ShouldBeTrue();
         }
 
         [Test]
@@ -67,7 +69,7 @@ namespace chess.engine.tests.Movement
 
             var validPath = validator.ValidatePath(BoardStateMock.Object, path);
             
-            AssertPathContains(new List<Path>{validPath}, 
+            PathsShouldContain(new List<Path>{validPath}, 
                 new ChessPathBuilder().From("D2")
                     .To("D3")
                     .To("D4")
@@ -82,8 +84,7 @@ namespace chess.engine.tests.Movement
 
             var validator = new ChessPathValidator(NullLogger<ChessPathValidator>.Instance, _providerMock.Object);
             var path = new ChessPathBuilder().Build();
-            Assert.That(() => validator.ValidatePath(BoardStateMock.Object, path), 
-                Throws.Exception);
+            Should.Throw<Exception>(() => validator.ValidatePath(BoardStateMock.Object, path));
         }
     }
 }

@@ -4,6 +4,7 @@ using chess.engine.Game;
 using chess.engine.Movement.Pawn;
 using chess.engine.tests.Builders;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement.Pawn
 {
@@ -27,14 +28,14 @@ namespace chess.engine.tests.Movement.Pawn
         [Test]
         public void ValidateMove_fails_when_take_location_not_empty()
         {
-            Assert.False(_validator.ValidateMove(AnyBoardMove, null));
+            _validator.ValidateMove(AnyBoardMove, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_fails_friendly_pawn_invalid()
         {
             _stepMocker.SetupLocationEmpty(true);
 
-            Assert.False(_validator.ValidateMove(AnyBoardMove, null));
+            _validator.ValidateMove(AnyBoardMove, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_fails_enemy_pawn_invalid()
@@ -42,7 +43,7 @@ namespace chess.engine.tests.Movement.Pawn
             _stepMocker.SetupLocationEmpty(true)
                 .SetupEnpassantFriendlyPawnValid(true, Friend);
 
-            Assert.False(_validator.ValidateMove(AnyBoardMove, null));
+            _validator.ValidateMove(AnyBoardMove, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_pass_when_both_pawns_valid()
@@ -51,7 +52,7 @@ namespace chess.engine.tests.Movement.Pawn
                 .SetupEnpassantFriendlyPawnValid(true, Friend)
                 .SetupEnpassantEnemyPawnValid(true);
 
-            Assert.True(_validator.ValidateMove(AnyBoardMove, null));
+            _validator.ValidateMove(AnyBoardMove, null).ShouldBeFalse();
         }
     }
 }

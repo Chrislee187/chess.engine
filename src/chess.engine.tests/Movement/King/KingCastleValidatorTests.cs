@@ -1,6 +1,7 @@
 ﻿using chess.engine.Movement.King;
 using chess.engine.tests.Builders;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement.King
 {
@@ -23,14 +24,14 @@ namespace chess.engine.tests.Movement.King
         [Test]
         public void ValidateMove_fails_when_king_is_not_allowed_to_castle()
         {
-            Assert.False(_validator.ValidateMove(null, null));
+            _validator.ValidateMove(null, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_fails_when_rook_is_not_allowed_to_castle()
         {
             _stepMocker.SetupKingCastleEligibility(true);
 
-            Assert.False(_validator.ValidateMove(null, null));
+            _validator.ValidateMove(null, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_fails_when_path_between_is_not_clear()
@@ -38,7 +39,7 @@ namespace chess.engine.tests.Movement.King
             _stepMocker.SetupKingCastleEligibility(true)
                 .SetupCastleRookEligibility(true);
 
-            Assert.False(_validator.ValidateMove(null, null));
+            _validator.ValidateMove(null, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_fails_when_path_between_is_not_safe()
@@ -47,7 +48,7 @@ namespace chess.engine.tests.Movement.King
                 .SetupCastleRookEligibility(true)
                 .SetupPathIsClear(true);
 
-            Assert.False(_validator.ValidateMove(null, null));
+            _validator.ValidateMove(null, null).ShouldBeFalse();
         }
         [Test]
         public void ValidateMove_succeeeds_when_all_steps_pass()
@@ -57,7 +58,7 @@ namespace chess.engine.tests.Movement.King
                 .SetupPathIsClear(true)
                 .SetupPathIsSafe(true);
 
-            Assert.True(_validator.ValidateMove(null, null));
+            _validator.ValidateMove(null, null).ShouldBeTrue();
         }
     }
 }

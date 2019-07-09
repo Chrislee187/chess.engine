@@ -5,6 +5,7 @@ using chess.engine.Game;
 using chess.engine.Movement.King;
 using chess.engine.tests.Builders;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement.King
 {
@@ -27,11 +28,11 @@ namespace chess.engine.tests.Movement.King
             var boardLocation = $"E{rank}".ToBoardLocation();
             var paths = _gen.PathsFrom(boardLocation, (int) forPlayer).ToList();
 
-            Assert.That(paths.Count(), Is.EqualTo(2));
+            paths.Count().ShouldBe(2);
 
-            AssertPathContains(paths,
+            PathsShouldContain(paths,
                 new ChessPathBuilder().From($"E{rank}").To($"G{rank}", (int)ChessMoveTypes.CastleKingSide).Build(), Colours.White);
-            AssertPathContains(paths,
+            PathsShouldContain(paths,
                 new ChessPathBuilder().From($"E{rank}").To($"C{rank}", (int)ChessMoveTypes.CastleQueenSide).Build(), Colours.White);
         }
     }

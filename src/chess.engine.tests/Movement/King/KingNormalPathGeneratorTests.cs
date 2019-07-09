@@ -5,6 +5,7 @@ using chess.engine.Game;
 using chess.engine.Movement.King;
 using chess.engine.tests.Builders;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement.King
 {
@@ -25,23 +26,23 @@ namespace chess.engine.tests.Movement.King
             var boardLocation = "E2".ToBoardLocation();
             var whitePaths = _gen.PathsFrom(boardLocation, (int) Colours.White).ToList();
 
-            Assert.That(whitePaths.Count(), Is.EqualTo(8));
+            whitePaths.Count().ShouldBe(8);
 
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("E3", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("F3", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("F2", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("F1", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("E1", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("D1", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("D2", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
-            AssertPathContains(whitePaths,
+            PathsShouldContain(whitePaths,
                 new ChessPathBuilder().From("E2").To("D3", (int)ChessMoveTypes.KingMove).Build(), Colours.White);
         }
     }

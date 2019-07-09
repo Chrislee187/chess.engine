@@ -6,6 +6,7 @@ using chess.engine.Actions;
 using chess.engine.Entities;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Actions
 {
@@ -26,7 +27,7 @@ namespace chess.engine.tests.Actions
         {
             foreach (var type in Enum.GetValues(typeof(DefaultActions)))
             {
-                Assert.DoesNotThrow(() => _provider.Create((int) type, null), $"{type} is not support");
+                Should.NotThrow(() => _provider.Create((int) type, null), $"{type} is not support");
             }
         }
         [Test]
@@ -34,7 +35,7 @@ namespace chess.engine.tests.Actions
         {
             foreach (var type in Enum.GetValues(typeof(ChessMoveTypes)))
             {
-                Assert.DoesNotThrow(() => _provider.Create((int)type, null), $"{type} is not support");
+                Should.NotThrow(() => _provider.Create((int)type, null), $"{type} is not support");
             }
         }
     }

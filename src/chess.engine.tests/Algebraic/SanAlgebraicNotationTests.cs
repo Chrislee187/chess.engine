@@ -1,9 +1,11 @@
-﻿using board.engine.Actions;
+﻿using System;
+using board.engine.Actions;
 using board.engine.Movement;
 using chess.engine.Extensions;
 using chess.engine.Game;
 using chess.engine.SAN;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Algebraic
 {
@@ -24,34 +26,34 @@ namespace chess.engine.tests.Algebraic
         {
             StandardAlgebraicNotation.Parse(notation);
 
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.That(an.Piece, Is.EqualTo(piece));
+            an.Piece.ShouldBe(piece);
         }
 
         [TestCase("Rxe6", ChessPieceName.Rook)]
         public void ShouldParsePieceNameFromComplexNotations(string notation, ChessPieceName piece)
         {
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.That(an.Piece, Is.EqualTo(piece));
+            an.Piece.ShouldBe(piece);
         }
 
         [TestCase("Rxe6")]
         public void ShouldParseTakeMoves(string notation)
         {
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.That(an.MoveType, Is.EqualTo(SanMoveTypes.Take));
+            an.MoveType.ShouldBe(SanMoveTypes.Take);
         }
 
         [TestCase("Re6", 5)]
         [TestCase("Rxe6", 5)]
         public void ShouldParseToFile(string notation, int file)
         {
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.That(an.ToFileX, Is.EqualTo(file));
+            an.ToFileX.ShouldBe(file);
         }
 
         [TestCase("Re6", 6)]
@@ -60,9 +62,10 @@ namespace chess.engine.tests.Algebraic
         [TestCase("Ra6xe6", 6)]
         public void ShouldParseToRank(string notation, int rank)
         {
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.That(an.ToRankY, Is.EqualTo(rank));
+            an.ToRankY.ShouldBe(rank);
+
         }
 
         [TestCase("Rae6", 1)]
@@ -70,20 +73,20 @@ namespace chess.engine.tests.Algebraic
         public void ShouldParseFromFile(string notation, int file)
         {
             StandardAlgebraicNotation.Parse(notation);
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.True(an.FromFileX.HasValue);
-            Assert.That(an.FromFileX.Value, Is.EqualTo(file));
+            an.FromFileX.HasValue.ShouldBeTrue();
+            an.FromFileX.Value.ShouldBe(file);
         }
 
         [TestCase("Ra6e6", 1)]
         [TestCase("Ra6xe6", 1)]
         public void ShouldParseFromRank(string notation, int rank)
         {
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.True(an.FromFileX.HasValue);
-            Assert.That(an.FromFileX.Value, Is.EqualTo(rank));
+            an.FromFileX.HasValue.ShouldBeTrue();
+            an.FromFileX.Value.ShouldBe(rank);
         }
         [TestCase("e8=Q", ChessPieceName.Queen)]
         [TestCase("dxe8=Q", ChessPieceName.Queen)]
@@ -91,10 +94,10 @@ namespace chess.engine.tests.Algebraic
         [TestCase("d1=Q+", ChessPieceName.Queen)]
         public void ShouldParsePromotion(string notation, ChessPieceName piece)
         {
-            Assert.That(StandardAlgebraicNotation.TryParse(notation, out var an));
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeTrue();
 
-            Assert.That(an.PromotionPiece.HasValue);
-            Assert.That(an.PromotionPiece.Value, Is.EqualTo(piece));
+            an.PromotionPiece.HasValue.ShouldBeTrue();
+            an.PromotionPiece.Value.ShouldBe(piece);
         }
 
         [TestCase("x8=Q")]
@@ -102,8 +105,9 @@ namespace chess.engine.tests.Algebraic
         [TestCase("e8=Z")]
         public void ShouldFailParsing(string notation)
         {
-            Assert.False(StandardAlgebraicNotation.TryParse(notation, out _));
-            Assert.That(() => StandardAlgebraicNotation.Parse(notation), Throws.Exception);
+            StandardAlgebraicNotation.TryParse(notation, out var an).ShouldBeFalse();
+
+            Should.Throw<Exception>(() => StandardAlgebraicNotation.Parse(notation));
         }
 
         [TestCase("a2", "a3", DefaultActions.MoveOnly, "a3")]
@@ -113,16 +117,17 @@ namespace chess.engine.tests.Algebraic
             var game = ChessFactory.NewChessGame();
             var move = BoardMove.Create(from.ToBoardLocation(), to.ToBoardLocation(), (int)moveType);
 
-            Assert.That(StandardAlgebraicNotation.ParseFromGameMove(game.BoardState, move).ToNotation(), Is.EqualTo(expectedSan));
+            StandardAlgebraicNotation.ParseFromGameMove(game.BoardState, move).ToNotation().ShouldBe(expectedSan);
         }
 
         [TestCase("R4h2", "h4h2")]
         public void ShouldDisambiguateRank(string move, string expected)
         {
             var san = StandardAlgebraicNotation.Parse(move);
-            Assert.False(san.FromFileX.HasValue);
-            Assert.True(san.FromRankY.HasValue);
-            Assert.That(san.FromRankY.Value, Is.EqualTo(4));
+
+            san.FromFileX.HasValue.ShouldBeFalse();
+            san.FromRankY.HasValue.ShouldBeTrue();
+            san.FromRankY.Value.ShouldBe(4);
 
         }
 
@@ -133,7 +138,7 @@ namespace chess.engine.tests.Algebraic
         [TestCase("axb4+")]
         public void Should_parse_san_notation(string san)
         {
-            Assert.That(StandardAlgebraicNotation.Parse(san).ToNotation(), Is.EqualTo(san));
+            StandardAlgebraicNotation.Parse(san).ToNotation().ShouldBe(san);
         }
 
         [Test]
@@ -156,7 +161,8 @@ namespace chess.engine.tests.Algebraic
             var piece = game.BoardState.GetItem(from);
             var boardMove = piece.Paths.FindMove(from, "f7".ToBoardLocation());
             var san = StandardAlgebraicNotation.ParseFromGameMove(game.BoardState, boardMove, true);
-            Assert.That(san.ToNotation(), Is.EqualTo("Bxf7+"));
+
+            san.ToNotation().ShouldBe("Bxf7+");
         }
 
 

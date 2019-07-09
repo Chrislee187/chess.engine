@@ -4,6 +4,7 @@ using chess.engine.Extensions;
 using chess.engine.Game;
 using chess.engine.Movement;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Movement
 {
@@ -18,7 +19,10 @@ namespace chess.engine.tests.Movement
             var finder = new FindAttackPaths();
             var attackPaths = finder.Attacking(loc);
             var paths = attackPaths.Straight;
-            AssertExpectedPaths(paths, new[]
+
+            paths.Any().ShouldBeTrue();
+
+            PathsShouldContainsMovesTo(paths, new[]
             {
                 "D1", "D2", "D3",
                 "D5", "D6", "D7", "D8",
@@ -36,9 +40,10 @@ namespace chess.engine.tests.Movement
 
             var attackPaths = finder.Attacking(loc);
             var paths = attackPaths.Diagonal;
-            Assert.True(paths.Any());
 
-            AssertExpectedPaths(paths, new[]
+            paths.Any().ShouldBeTrue();
+
+            PathsShouldContainsMovesTo(paths, new[]
             {
                 "E5", "F6", "G7", "H8",
                 "C3", "B2", "A1",
@@ -56,9 +61,10 @@ namespace chess.engine.tests.Movement
 
             var attackPaths = finder.Attacking(loc);
             var paths = attackPaths.Knight;
-            Assert.True(paths.Any());
+            paths.Any().ShouldBeTrue();
 
-            AssertExpectedPaths(paths, new[]
+
+            PathsShouldContainsMovesTo(paths, new[]
             {
                 "E6", "F5", "F3", "E2", "C2", "B3", "B5", "C6"
             });
@@ -73,9 +79,9 @@ namespace chess.engine.tests.Movement
 
             var attackPaths = finder.Attacking(loc);
             var paths = attackPaths.Pawns;
-            Assert.True(paths.Any());
-
-            AssertExpectedPaths(paths, new[]
+            paths.Any().ShouldBeTrue();
+            
+            PathsShouldContainsMovesTo(paths, new[]
             {
                 "C5", "E5"
             });
@@ -90,27 +96,22 @@ namespace chess.engine.tests.Movement
 
             var attackPaths = finder.Attacking(loc, Colours.Black);
             var paths = attackPaths.Pawns;
-            Assert.True(paths.Any());
-
-            AssertExpectedPaths(paths, new[]
+            paths.Any().ShouldBeTrue();
+            
+            PathsShouldContainsMovesTo(paths, new[]
             {
                 "C3", "E3"
             });
         }
 
-        private void AssertExpectedPaths(Paths paths, string[] moveTos)
+        private void PathsShouldContainsMovesTo(Paths paths, string[] movesTo)
         {
-            Assert.That(moveTos.Count, Is.EqualTo(paths.FlattenMoves().Count()));
+            movesTo.Count().ShouldBe(paths.FlattenMoves().Count());
 
-            foreach (var moveTo in moveTos)
+            foreach (var moveTo in movesTo)
             {
-                AssertPathsContainsMoveTo(paths, moveTo);
+                paths.ContainsMoveTo(moveTo.ToBoardLocation()).ShouldBeTrue();
             }
-        }
-
-        private void AssertPathsContainsMoveTo(Paths paths, string loc)
-        {
-            Assert.That(paths.ContainsMoveTo(loc.ToBoardLocation()), $"expected to find {loc} paths");
         }
     }
 }

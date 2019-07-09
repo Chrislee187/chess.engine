@@ -1,6 +1,7 @@
 ﻿using chess.engine.Game;
 using chess.engine.Pieces;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.tests.Pieces
 {
@@ -11,14 +12,14 @@ namespace chess.engine.tests.Pieces
         [TestCase(Colours.Black, 7)]
         public void Should_have_correct_pawn_starting_ranks(Colours player, int rank)
         {
-            Assert.That(Pawn.StartRankFor(player), Is.EqualTo(rank));
+            Pawn.StartRankFor(player).ShouldBe(rank);
         }
 
         [TestCase(Colours.White, 5)]
         [TestCase(Colours.Black, 4)]
         public void Should_have_correct_enpassant_ranks(Colours player, int rank)
         {
-            Assert.That(Pawn.EnPassantRankFor(player), Is.EqualTo(rank));
+            Pawn.EnPassantRankFor(player).ShouldBe(rank);
         }
     }
 }
