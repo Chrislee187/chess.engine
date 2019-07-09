@@ -29,7 +29,7 @@ namespace chess.engine.Game
                 }
                 else
                 {
-                    throw new Exception($"Don't know how to map '{piece}' for board building purposes");
+                    Throw.BoardBuilder($"Don't know how to map '{piece}' for board building purposes");
                 }
             }
 
@@ -170,7 +170,7 @@ namespace chess.engine.Game
                         }
                         else if (chr != ' ' && chr != '.' && chr != '\0')
                         {
-                            throw new Exception($"Invalid piece '{chr}'");
+                            Throw.InvalidPiece(chr);
                         }
                     }
                 }

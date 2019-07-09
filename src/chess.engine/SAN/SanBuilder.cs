@@ -4,6 +4,7 @@ using System.Linq;
 using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
+using chess.engine.Extensions;
 using chess.engine.Game;
 using chess.engine.Pieces;
 
@@ -77,7 +78,7 @@ namespace chess.engine.SAN
 
             if (otherPieces.Any())
             {
-                throw new NotImplementedException($"Unable to disambiguate {move}");
+                Throw.InvalidSan($"Unable to disambiguate {move}");
             }
             // ReSharper restore PossibleMultipleEnumeration
 
@@ -112,8 +113,7 @@ namespace chess.engine.SAN
                     return StandardAlgebraicNotation.KingSideCastle;
                 }
 
-
-                throw new ArgumentException($"{notation} is not a valid castle notation");
+                Throw.InvalidSan($"{notation} is not a valid castle notation");
             }
             var tokens = ParseFirstToken(notation);
 
@@ -136,7 +136,7 @@ namespace chess.engine.SAN
             else if (firstCharTokenType != SanTokenTypes.File &&
                      firstCharTokenType != SanTokenTypes.Rank)
             {
-                throw new ArgumentOutOfRangeException($"Unexpected token in first character '{firstChar}'");
+                Throw.InvalidSan($"Unexpected token in first character '{firstChar}'");
             }
 
             return tokens;
@@ -153,8 +153,8 @@ namespace chess.engine.SAN
                     action(this, c);
                 }
                 else
-                { 
-                    throw new ArgumentOutOfRangeException($"No action found for token type: {t}");
+                {
+                    Throw.InvalidSan($"No action found for token type: {t}");
                 }
             }
         }
@@ -165,7 +165,7 @@ namespace chess.engine.SAN
             int toFile, toRank;
             if (!_secondFile.HasValue && !_secondRank.HasValue)
             {
-                if(!_firstRank.HasValue || !_firstFile.HasValue) throw new ArgumentOutOfRangeException($"Rank or File is missing");
+                if(!_firstRank.HasValue || !_firstFile.HasValue) Throw.InvalidSan($"Rank or File is missing");
 
                 toRank = _firstRank.Value;
                 toFile = _firstFile.Value;
@@ -210,7 +210,7 @@ namespace chess.engine.SAN
             }
             else
             {
-                throw new ArgumentOutOfRangeException($"Unexpected {nameof(SanTokenTypes.File)} token '{c}'");
+                Throw.InvalidSan($"Unexpected {nameof(SanTokenTypes.File)} token '{c}'");
             }
         }
 
@@ -226,7 +226,7 @@ namespace chess.engine.SAN
             }
             else
             {
-                throw new ArgumentOutOfRangeException($"Unexpected {nameof(SanTokenTypes.Rank)} token '{c}'");
+                Throw.InvalidSan($"Unexpected {nameof(SanTokenTypes.Rank)} token '{c}'");
             }
         }
 
@@ -238,7 +238,7 @@ namespace chess.engine.SAN
             }
             else
             {
-                throw new ArgumentOutOfRangeException($"Unexpected {nameof(SanTokenTypes.Piece)} token '{c}'");
+                Throw.InvalidSan($"Unexpected {nameof(SanTokenTypes.Piece)} token '{c}'");
             }
         }
 

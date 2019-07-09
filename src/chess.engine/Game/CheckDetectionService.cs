@@ -4,6 +4,7 @@ using board.engine;
 using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
+using chess.engine.Extensions;
 using chess.engine.Movement;
 using Microsoft.Extensions.Logging;
 
@@ -49,7 +50,7 @@ namespace chess.engine.Game
 
             if (whiteState != PlayerState.None && blackState != PlayerState.None)
             {
-                throw new Exception($"Invalid game states white/black {whiteState}/{blackState}");
+                Throw.InvalidGameState($"Invalid game states white/black {whiteState}/{blackState}");
             }
 
             if (blackState == PlayerState.None)

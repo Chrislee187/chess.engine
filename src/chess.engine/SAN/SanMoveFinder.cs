@@ -36,7 +36,7 @@ namespace chess.engine.SAN
             {
                 var exact = FindExactMove(san, destination);
 
-                if (exact == null) throw new MoveFinderException($"Move not found: {san.ToNotation()}");
+                if (exact == null) Throw.MoveNotFound($"Move not found: {san.ToNotation()}");
 
                 return exact;
             }
@@ -60,7 +60,8 @@ namespace chess.engine.SAN
             }
 
 
-            throw new MoveFinderException($"Couldn't disambiguate move: {san.ToNotation()}");
+            Throw.MoveNotFound($"Couldn't disambiguate move: {san.ToNotation()}");
+            return null;
         }
 
         private BoardMove FindCastleMove(StandardAlgebraicNotation san, Colours forPlayer)
@@ -69,7 +70,7 @@ namespace chess.engine.SAN
 
             if (king == null)
             {
-                throw new MoveFinderException($"King not found: {san.ToNotation()}");
+                Throw.MoveNotFound($"King not found: {san.ToNotation()}");
             }
 
             var y = forPlayer == Colours.White ? 1 : 8;
@@ -78,7 +79,7 @@ namespace chess.engine.SAN
             var to = BoardLocation.At(san.ToFileX, y);
             var move = king.Paths.FindMove(@from, to);
 
-            if (move == null) throw new MoveFinderException($"No valid castle move found: {from}{to}");
+            if (move == null) Throw.MoveNotFound($"No valid castle move found: {from}{to}");
 
             return move;
         }
@@ -94,7 +95,7 @@ namespace chess.engine.SAN
 
             if (mv == null)
             {
-                throw new MoveFinderException($"Cannot find move matching '{san.ToNotation()}', destination '{destination.ToChessCoord()}', moveList '{moveList}");
+                Throw.MoveNotFound($"Cannot find move matching '{san.ToNotation()}', destination '{destination.ToChessCoord()}', moveList '{moveList}");
             }
 
             return mv;

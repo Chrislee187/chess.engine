@@ -3,6 +3,7 @@ using board.engine;
 using board.engine.Movement;
 using chess.engine.Actions;
 using chess.engine.Entities;
+using chess.engine.Extensions;
 using chess.engine.Movement;
 using chess.engine.Movement.King;
 using chess.engine.SAN;
@@ -27,8 +28,11 @@ namespace chess.engine.Game
                 case LoggerType.Injected:
                     return AppContainer.GetService<ILogger<T>>();
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    Throw.InvalidArgument("Unsupported LoggerType", nameof(type));
+                    break;
             }
+            Throw.InvalidArgument("Unsupported LoggerType", nameof(type));
+            return null;
         }
 
         public static ChessPieceEntityFactory ChessPieceEntityFactory(LoggerType logger = LoggerType.Injected)
@@ -46,20 +50,6 @@ namespace chess.engine.Game
                 Logger<ChessPathValidator>(logger),
                 moveValidationProvider ?? MoveValidationProvider(logger)
             );
-//
-//        private static ChessPathsValidator _pathsValidatorSingleton;
-//        public static ChessPathsValidator PathsValidator(LoggerType logger = LoggerType.Injected,
-//            IPathValidator<ChessPieceEntity> pathValidator = null
-//            )
-//        {
-//            if (_pathsValidatorSingleton != null) return _pathsValidatorSingleton;
-//
-//            _pathsValidatorSingleton = new ChessPathsValidator(
-//                Logger<ChessPathsValidator>(logger),
-//                pathValidator ?? PathValidator(null, logger)
-//            );
-//            return _pathsValidatorSingleton;
-//        }
 
         public static ChessPathsValidator PathsValidator(LoggerType logger = LoggerType.Injected,
             IPathValidator<ChessPieceEntity> pathValidator = null

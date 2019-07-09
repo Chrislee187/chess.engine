@@ -3,6 +3,7 @@ using System.Linq;
 using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
+using chess.engine.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Movement
@@ -30,7 +31,7 @@ namespace chess.engine.Movement
             {
                 if (!_validationProvider.TryGetValue(move.MoveType, out var moveTests))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(move.MoveType), move.MoveType, $"No Move Validator implemented for {move.MoveType}");
+                    Throw.UnsupportedMoveType(move.MoveType);
                 }
 
                 if (!moveTests.All(t => t(move, boardState)))

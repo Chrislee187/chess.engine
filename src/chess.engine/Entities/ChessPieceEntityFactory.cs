@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using board.engine;
+using chess.engine.Extensions;
 using chess.engine.Game;
 
 namespace chess.engine.Entities
@@ -24,7 +25,7 @@ namespace chess.engine.Entities
             var data = typeData as ChessPieceEntityFactoryTypeExtraData;
             if (data == null)
             {
-                throw new ArgumentException($"{nameof(typeData)} is not of type {nameof(ChessPieceEntityFactoryTypeExtraData)}");
+                Throw.InvalidArgument($"Expected type {nameof(ChessPieceEntityFactoryTypeExtraData)}", nameof(typeData));
 
             }
             return Create(data.PieceName, data.Owner);

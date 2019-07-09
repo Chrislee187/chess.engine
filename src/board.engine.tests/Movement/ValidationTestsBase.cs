@@ -20,26 +20,29 @@ namespace board.engine.tests.Movement
 
         protected void SetupFromEntity(BoardMove move, TestBoardEntity entity = null)
         {
+            var locatedEntity = CreateItem(move, entity);
+
+            RoBoardStateMock.Setup(m => m.GetItem(It.Is<BoardLocation>(l => move.From.Equals(l))))
+                .Returns(locatedEntity);
+        }
+
+
+        protected void SetupToEntity(BoardMove move, TestBoardEntity entity = null)
+        {
+            var locatedEntity = CreateItem(move, entity);
+
+            RoBoardStateMock.Setup(m => m.GetItem(It.Is<BoardLocation>(l => move.To.Equals(l))))
+                .Returns(locatedEntity);
+        }
+        private static LocatedItem<TestBoardEntity> CreateItem(BoardMove move, TestBoardEntity entity)
+        {
             LocatedItem<TestBoardEntity> locatedEntity = null;
             if (entity != null)
             {
                 locatedEntity = new LocatedItem<TestBoardEntity>(move.From, entity, new Paths());
             }
 
-            RoBoardStateMock.Setup(m => m.GetItem(It.Is<BoardLocation>(l => move.From.Equals(l))))
-                .Returns(locatedEntity);
-        }
-
-        protected void SetupToEntity(BoardMove move, TestBoardEntity entity = null)
-        {
-            LocatedItem<TestBoardEntity> locatedEntity = null;
-            if (entity != null)
-            {
-                locatedEntity = new LocatedItem<TestBoardEntity>(move.To, entity, new Paths());
-            }
-
-            RoBoardStateMock.Setup(m => m.GetItem(It.Is<BoardLocation>(l => move.To.Equals(l))))
-                .Returns(locatedEntity);
+            return locatedEntity;
         }
 
         protected void SetupGetNonOwnerEntities(BoardMove move, TestBoardEntity entity)

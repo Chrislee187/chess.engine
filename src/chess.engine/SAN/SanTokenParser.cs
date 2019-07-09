@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using chess.engine.Extensions;
 using chess.engine.Game;
 
 namespace chess.engine.SAN
@@ -33,7 +34,8 @@ namespace chess.engine.SAN
             if (c == PromoteNotator) return SanTokenTypes.PromoteDelimiter;
             if (c == CheckNotator) return SanTokenTypes.Check;
 
-            throw new ArgumentOutOfRangeException($"Unknown token: '{c}'");
+            Throw.InvalidSan($"Unknown token: '{c}'");
+            return SanTokenTypes.Null;
         }
 
         public static char ToSanToken(ChessPieceName piece)

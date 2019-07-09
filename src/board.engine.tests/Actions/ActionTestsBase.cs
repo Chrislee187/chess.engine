@@ -41,8 +41,6 @@ namespace board.engine.tests.Actions
         protected void VerifyLocationWasCleared(BoardLocation loc)
             => StateMock.Verify(s => s.Remove(loc), Times.Once);
 
-        protected void VerifyLocationWasNOTCleared(BoardLocation loc)
-            => StateMock.Verify(s => s.Remove(loc), Times.Never);
         protected void VerifyActionWasCreated(int action)
             => ActionFactoryMock.Verify(m => m.Create(action, It.IsAny<IBoardState<TEntity>>()), Times.Once);
 
@@ -57,12 +55,10 @@ namespace board.engine.tests.Actions
 
         protected void VerifyEntityWasPlaced(BoardLocation loc, TEntity piece)
             => StateMock.Verify(m => m.PlaceEntity(loc, piece), Times.Once);
+
         protected void VerifyNewEntityWasPlaced(BoardLocation loc, TEntity piece)
             => StateMock.Verify(m => m.PlaceEntity(loc,
                 It.Is<TEntity>(cpe => cpe.Equals(piece))), Times.Once);
-        protected void VerifyNewEntityWasNOTPlaced(BoardLocation loc, TEntity piece)
-            => StateMock.Verify(m => m.PlaceEntity(loc,
-                It.Is<TEntity>(cpe => cpe.Equals(piece))), Times.Never);
 
         protected void SetupStateIsEmpty(BoardLocation at, bool isEmpty) 
             => StateMock.Setup(s => s.IsEmpty(It.Is<BoardLocation>(bl => bl.Equals(at)))).Returns(isEmpty);

@@ -7,6 +7,8 @@
         File,
         Take,
         PromoteDelimiter,
-        Check
+        Check,
+
+        Null = int.MinValue
     }
 }

@@ -6,6 +6,7 @@ using board.engine;
 using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
+using chess.engine.Extensions;
 using chess.engine.Pieces;
 
 namespace chess.engine.Game
@@ -97,7 +98,7 @@ namespace chess.engine.Game
 
         public static ChessGame Deserialise(string boardformat69Char)
         {
-            if (boardformat69Char.Length != 69) throw new ArgumentException($"Invalid serialised board, must be 69 characters long (yours was {boardformat69Char.Length})", nameof(boardformat69Char));
+            if (boardformat69Char.Length != 69) Throw.InvalidBoardFormat($"Invalid serialised board, must be 69 characters long (yours was {boardformat69Char.Length})");
 
             // TODO: Handling of invalid formats
             int idx = 1;
