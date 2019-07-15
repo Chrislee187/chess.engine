@@ -19,12 +19,13 @@ namespace chess.engine.Game
         private SanMoveFinder _sanMoveFinder;
 
         public static bool OutOfBounds(int value) => value < 1 || value > 8;
-        public Colours CurrentPlayer { get; private set; }
         public GameCheckState CheckState { get; private set; }
         public bool InProgress => CheckState == GameCheckState.None;
         public LocatedItem<ChessPieceEntity>[,] Board => _engine.Board;
 
         public IBoardState<ChessPieceEntity> BoardState => _engine.BoardState;
+
+        public Colours CurrentPlayer => (Colours) _engine.CurrentPlayer;
 
         public ChessGame(
             ILogger<ChessGame> logger,
@@ -43,14 +44,13 @@ namespace chess.engine.Game
             IBoardSetup<ChessPieceEntity> setup,
             Colours whoseTurn = Colours.White)
         {
-
             _logger = logger;
             _logger?.LogInformation("Initialising new chess game");
 
-            _engine = boardEngineProvider.Provide(setup);
+            _engine = boardEngineProvider.Provide(setup, (int) whoseTurn);
 
             _checkDetectionService = checkDetectionService;
-            CurrentPlayer = whoseTurn;
+            _engine.CurrentPlayer = (int) whoseTurn;
             CheckState = _checkDetectionService.Check(BoardState);
         }
 
@@ -67,7 +67,7 @@ namespace chess.engine.Game
 
             _sanMoveFinder = new SanMoveFinder(_engine.BoardState);
 
-            var move = _sanMoveFinder.Find(san, CurrentPlayer);
+            var move = _sanMoveFinder.Find(san, (Colours) _engine.CurrentPlayer);
 
             if (move == null)
             {
@@ -91,7 +91,7 @@ namespace chess.engine.Game
                 Debugger.Break();
             }
 
-            CurrentPlayer = NextPlayer();
+            _engine.CurrentPlayer = (int) NextPlayer();
             CheckState = _checkDetectionService.Check(BoardState);
 
             return CheckState != GameCheckState.None
@@ -108,7 +108,7 @@ namespace chess.engine.Game
                 .ForEach(p => p.TwoStep = false);
         }
 
-        private Colours NextPlayer() => CurrentPlayer == Colours.White ? Colours.Black : Colours.White;
+        private Colours NextPlayer() => (Colours) _engine.CurrentPlayer == Colours.White ? Colours.Black : Colours.White;
 
         #region Meta Info
 

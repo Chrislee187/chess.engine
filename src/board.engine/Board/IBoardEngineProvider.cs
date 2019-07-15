@@ -2,6 +2,6 @@
 {
     public interface IBoardEngineProvider<TEntity> where TEntity : class, IBoardEntity
     {
-        BoardEngine<TEntity> Provide(IBoardSetup<TEntity> boardSetup);
+        BoardEngine<TEntity> Provide(IBoardSetup<TEntity> boardSetup, int currentPlayer);
     }
 }

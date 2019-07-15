@@ -27,11 +27,11 @@ namespace chess.engine.Movement
         private readonly IDictionary<string, LocatedItem<ChessPieceEntity>[]> _stateCache
         = new Dictionary<string, LocatedItem<ChessPieceEntity>[]>();
 
-        public void RefreshAllPaths(IBoardState<ChessPieceEntity> boardState)
+        public void RefreshAllPaths(IBoardState<ChessPieceEntity> boardState, int currentPlayer)
         {
             _logger?.LogDebug("Beginning ChessRefreshAllPaths process...");
 
-            RefreshPathsFeature(boardState);
+            RefreshPathsFeature(boardState, (Colours) currentPlayer);
 
             // NOTE: IMPORTANT: Kings must be evaluated last to ensure that moves
             // from other pieces that would cause check are generated first!
@@ -48,7 +48,7 @@ namespace chess.engine.Movement
             _logger?.LogDebug($"ChessRefreshAllPaths process finished... {boardStateGetAllItemLocations.Count()} paths refreshed");
         }
 
-        private void RefreshPathsFeature(IBoardState<ChessPieceEntity> boardState)
+        private void RefreshPathsFeature(IBoardState<ChessPieceEntity> boardState, Colours currentPlayer)
         {
             if (FeatureFlags.CachingPaths)
             {
@@ -62,7 +62,7 @@ namespace chess.engine.Movement
                 else
                 {
 
-                    RefreshChessPaths(boardState);
+                    RefreshChessPaths(boardState, currentPlayer);
 
                     if (FeatureFlags.CachingPaths)
                     {
@@ -72,25 +72,33 @@ namespace chess.engine.Movement
             }
             else
             {
-                RefreshChessPaths(boardState);
+                RefreshChessPaths(boardState, currentPlayer);
             }
         }
 
-        private static void RefreshChessPaths(IBoardState<ChessPieceEntity> boardState)
+        private static void RefreshChessPaths(IBoardState<ChessPieceEntity> boardState, Colours whoseTurn)
         {
-            // NOTE: care must be taken refreshing all the paths on the chess board
-            // as kings need to know the enemy piece paths before their moves can be validated
-            // (so as not to move in to check etc.)
-            // 
-            // As the boardState refresh parallelises the calls we must do the kings after all the others
-            // to avoid race conditions with a king trying to validate before all the enemy pieces have complete
-            // move lists (took nearly 5500 games being processed to finally track this one down!)
-
+            // NOTE: Kings cannot move in to check, so we regenerate their state last so the know
+            // all of the enemy piece attack paths
             var nonKings = boardState.GetItems().Where(i => i.Item.EntityType != (int) ChessPieceName.King);
-            var kings = boardState.GetItems().Where(i => i.Item.EntityType == (int) ChessPieceName.King);
+            var kings = boardState.GetItems().Where(i => i.Item.EntityType == (int) ChessPieceName.King).ToList();
 
             boardState.RefreshPathsFor(nonKings);
-            boardState.RefreshPathsFor(kings);
+
+            // NOTE: Kings can't move next to each other, so we update the enemy kings state first so that we can
+            // so when regen the friendly kings state it knows where the enemy kings can move to, and therefore
+            // where it cannot
+
+            if(whoseTurn == Colours.White)
+            {
+                boardState.RefreshPathsFor(kings.Where(k => k.Item.Owner == (int)Colours.Black));
+                boardState.RefreshPathsFor(kings.Where(k => k.Item.Owner == (int)Colours.White));
+            }
+            else
+            {
+                boardState.RefreshPathsFor(kings.Where(k => k.Item.Owner == (int)Colours.White));
+                boardState.RefreshPathsFor(kings.Where(k => k.Item.Owner == (int)Colours.Black));
+            }
 
         }
 

@@ -3,7 +3,6 @@ using board.engine;
 using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
-using chess.engine.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Movement
@@ -29,34 +28,12 @@ namespace chess.engine.Movement
                     .SelectMany(pg => pg.PathsFrom(boardLocation, entity.Owner))
             );
 
-            var validPaths = RemoveInvalidMoves2(boardState, paths);
+            var validPaths = RemoveInvalidMoves(boardState, paths);
 
             return validPaths;
         }
 
-        private Paths RemoveInvalidMoves(IBoardState<ChessPieceEntity> boardState, Paths possiblePaths)
-        {
-            var validPaths = new Paths();
-
-            possiblePaths.ForEach(possiblePath =>
-            {
-                ValidatePath(boardState, possiblePath, validPaths);
-            });
-
-            return validPaths;
-        }
-
-        private void ValidatePath(IBoardState<ChessPieceEntity> boardState, Path possiblePath, Paths validPaths)
-        {
-            var testedPath = _pathValidator.ValidatePath(boardState, possiblePath);
-
-            if (testedPath.Any())
-            {
-                validPaths.Add(testedPath);
-            }
-        }
-
-        private Paths RemoveInvalidMoves2(IBoardState<ChessPieceEntity> boardState, Paths possiblePaths) =>
+        private Paths RemoveInvalidMoves(IBoardState<ChessPieceEntity> boardState, Paths possiblePaths) =>
             new Paths(
                 possiblePaths
                     .Where(possiblePath => _pathValidator.ValidatePath(boardState, possiblePath).Any())

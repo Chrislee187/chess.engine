@@ -24,13 +24,14 @@ namespace chess.engine.Game
             _refreshAllPaths = refreshAllPaths;
             _boardEngineLogger = boardEngineLogger;
         }
-        public BoardEngine<ChessPieceEntity> Provide(IBoardSetup<ChessPieceEntity> boardSetup)
+        public BoardEngine<ChessPieceEntity> Provide(IBoardSetup<ChessPieceEntity> boardSetup, int currentPlayer)
         {
             return new BoardEngine<ChessPieceEntity>(_boardEngineLogger,
                 boardSetup,
                 _chessPathsValidator,
                 _boardMoveService,
-                _refreshAllPaths);
+                _refreshAllPaths,
+                currentPlayer);
         }
     }
 }

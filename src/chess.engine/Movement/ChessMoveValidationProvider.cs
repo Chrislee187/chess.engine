@@ -13,12 +13,10 @@ namespace chess.engine.Movement
             Validators.Add((int)ChessMoveTypes.KingMove, new BoardMovePredicate<ChessPieceEntity>[] {
                 (move, boardState) =>
                 {
-
                     return new DestinationIsEmptyOrContainsEnemyValidator<ChessPieceEntity>().ValidateMove(move, boardState);
                 },
                 (move, boardState) =>
                 {
-
                     return new DestinationNotUnderAttackValidator<ChessPieceEntity>().ValidateMove(move, boardState);
                 }
             });
@@ -27,7 +25,6 @@ namespace chess.engine.Movement
                 new BoardMovePredicate<ChessPieceEntity>[]
                 {(move, boardState) =>
                     {
-
                         return new EnPassantTakeValidator(chessValidationSteps).ValidateMove(move, boardState);
                     }
                 });
@@ -36,7 +33,6 @@ namespace chess.engine.Movement
                 new BoardMovePredicate<ChessPieceEntity>[]
                 {(move, boardState) =>
                     {
-
                         return new DestinationIsEmptyValidator<ChessPieceEntity>().ValidateMove(move, boardState);
                     }
                 });

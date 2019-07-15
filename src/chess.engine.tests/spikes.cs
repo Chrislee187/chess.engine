@@ -35,7 +35,7 @@ namespace chess.engine.tests
         [Test]
         public void Should()
         {
-            var engine = ChessFactory.ChessBoardEngineProvider().Provide(_chessBoardSetup);
+            var engine = ChessFactory.ChessBoardEngineProvider().Provide(_chessBoardSetup, (int) Colours.White);
 
             var startLocation = "B2".ToBoardLocation();
 

@@ -17,6 +17,8 @@ namespace board.engine
         public int Width { get; private set; } = 8;
         public int Height { get; private set; } = 8;
 
+        public int CurrentPlayer { get; set; } = 0;
+
         public BoardEngine(
             ILogger<BoardEngine<TEntity>> logger,
             IBoardSetup<TEntity> boardSetup, 
@@ -24,16 +26,17 @@ namespace board.engine
             IBoardMoveService<TEntity> boardMoveService
             )
 
-            : this(logger, boardSetup, pathsValidator, boardMoveService, new DefaultRefreshAllPaths())
+            : this(logger, boardSetup, pathsValidator, boardMoveService, new DefaultRefreshAllPaths(), 0)
         { }
 
-        public BoardEngine(
-            ILogger<BoardEngine<TEntity>> logger, 
+        public BoardEngine(ILogger<BoardEngine<TEntity>> logger,
             IBoardSetup<TEntity> boardSetup,
             IPathsValidator<TEntity> pathsValidator,
             IBoardMoveService<TEntity> boardMoveService,
-            IRefreshAllPaths<TEntity> refreshAllPaths)
+            IRefreshAllPaths<TEntity> refreshAllPaths, 
+            int currentPlayer)
         {
+            CurrentPlayer = currentPlayer;
             _boardMoveService = boardMoveService;
             _logger = logger;
 
@@ -43,14 +46,14 @@ namespace board.engine
             _boardSetup.SetupPieces(this);
 
             _refreshAllPaths = refreshAllPaths;
-            _refreshAllPaths.RefreshAllPaths(BoardState);
+            _refreshAllPaths.RefreshAllPaths(BoardState, CurrentPlayer);
         }
 
         public void ResetBoard()
         {
             ClearBoard();
             _boardSetup.SetupPieces(this);
-            _refreshAllPaths.RefreshAllPaths(BoardState);
+            _refreshAllPaths.RefreshAllPaths(BoardState, CurrentPlayer);
         }
 
         public void ClearBoard() => BoardState.Clear();
@@ -94,12 +97,12 @@ namespace board.engine
             var t = move.ToString();
             _boardMoveService.Move(BoardState, move);
 
-            _refreshAllPaths.RefreshAllPaths(BoardState);
+            _refreshAllPaths.RefreshAllPaths(BoardState, CurrentPlayer);
         }
 
         private class DefaultRefreshAllPaths : IRefreshAllPaths<TEntity>
         {
-            public void RefreshAllPaths(IBoardState<TEntity> boardState) 
+            public void RefreshAllPaths(IBoardState<TEntity> boardState, int currentPlayer) 
                 => boardState.GetItems().ToList()
                     .ForEach(boardState.RegenerateValidatedPaths);
         }
