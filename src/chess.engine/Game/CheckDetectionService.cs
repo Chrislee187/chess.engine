@@ -6,7 +6,6 @@ using board.engine.Movement;
 using chess.engine.Entities;
 using chess.engine.Extensions;
 using chess.engine.Movement;
-using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Game
 {
@@ -18,21 +17,18 @@ namespace chess.engine.Game
     /// </summary>
     public class CheckDetectionService : ICheckDetectionService
     {
-        private readonly ILogger<CheckDetectionService> _logger;
         private readonly IPlayerStateService _playerStateService;
         private readonly IBoardMoveService<ChessPieceEntity> _moveService;
         private readonly IFindAttackPaths _pathFinder;
         private readonly IPathsValidator<ChessPieceEntity> _pathsValidator;
 
         public CheckDetectionService(
-            ILogger<CheckDetectionService> logger,
             IPlayerStateService playerStateService,
             IBoardMoveService<ChessPieceEntity> moveService,
             IFindAttackPaths findAttackPaths,
             IPathsValidator<ChessPieceEntity> pathsValidator
         )
         {
-            _logger = logger;
             _moveService = moveService;
             _playerStateService = playerStateService;
             _pathFinder = findAttackPaths;

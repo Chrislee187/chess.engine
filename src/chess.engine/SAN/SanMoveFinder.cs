@@ -88,7 +88,6 @@ namespace chess.engine.SAN
         {
             var from = BoardLocation.At(san.FromFileX.Value, san.FromRankY.Value);
             var item = _boardState.GetItem(@from);
-            Console.WriteLine($"Searching for move: {from}{destination}");
             var mv = item.Paths.FindMove(@from, destination);
 
             var moveList = item.Paths.FlattenMoves().Select(m => m.ToChessCoords()).Aggregate((s, v) => s += $"{v},");

@@ -112,7 +112,6 @@ namespace chess.engine.Game
             // TODO: King/Castle location history stuff
             
             var chessGame = new ChessGame(
-                ChessFactory.Logger<ChessGame>(),
                 ChessFactory.ChessBoardEngineProvider(),
                 ChessFactory.CheckDetectionService(),
                 setup,

@@ -10,7 +10,7 @@ namespace chess.engine.integration.tests.Serialisation
         [Test]
         public void Should_serialise_and_deserialise_to_68char_format()
         {
-            var chessGame = ChessFactory.NewChessGame(ChessFactory.LoggerType.Null);
+            var chessGame = ChessFactory.NewChessGame();
             var actualNewBoard = ChessGameConvert.Serialise(chessGame);
 
             var expectedNewBoard = "rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR" // The board

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using board.engine.Board;
 using board.engine.Movement;
-using Microsoft.Extensions.Logging;
 
 namespace board.engine
 {
@@ -12,25 +11,21 @@ namespace board.engine
 
         private readonly IBoardSetup<TEntity> _boardSetup;
         private readonly IRefreshAllPaths<TEntity> _refreshAllPaths;
-        private ILogger<BoardEngine<TEntity>> _logger;
 
         public int Width { get; private set; } = 8;
         public int Height { get; private set; } = 8;
 
         public int CurrentPlayer { get; set; } = 0;
 
-        public BoardEngine(
-            ILogger<BoardEngine<TEntity>> logger,
-            IBoardSetup<TEntity> boardSetup, 
+        public BoardEngine(IBoardSetup<TEntity> boardSetup, 
             IPathsValidator<TEntity> pathsValidator,
             IBoardMoveService<TEntity> boardMoveService
             )
 
-            : this(logger, boardSetup, pathsValidator, boardMoveService, new DefaultRefreshAllPaths(), 0)
+            : this(boardSetup, pathsValidator, boardMoveService, new DefaultRefreshAllPaths(), 0)
         { }
 
-        public BoardEngine(ILogger<BoardEngine<TEntity>> logger,
-            IBoardSetup<TEntity> boardSetup,
+        public BoardEngine(IBoardSetup<TEntity> boardSetup,
             IPathsValidator<TEntity> pathsValidator,
             IBoardMoveService<TEntity> boardMoveService,
             IRefreshAllPaths<TEntity> refreshAllPaths, 
@@ -38,7 +33,6 @@ namespace board.engine
         {
             CurrentPlayer = currentPlayer;
             _boardMoveService = boardMoveService;
-            _logger = logger;
 
             BoardState = new BoardState<TEntity>(pathsValidator);
 

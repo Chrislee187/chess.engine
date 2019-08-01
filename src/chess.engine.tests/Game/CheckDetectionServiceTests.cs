@@ -48,7 +48,6 @@ namespace chess.engine.tests.Game
         public void Check_returns_valid_check_states(PlayerState whiteState, PlayerState blackState, GameCheckState expectedGameState)
         {
             var service = new CheckDetectionService(
-                ChessFactory.Logger<CheckDetectionService>(),
                 _playerStateServiceMock.Object,
                 ChessFactory.BoardMoveService(ChessFactory.ChessBoardActionProvider()),
                 ChessFactory.FindAttackPaths(),
@@ -73,7 +72,6 @@ namespace chess.engine.tests.Game
         public void Check_throws_if_both_sides_in_check()
         {
             var service = new CheckDetectionService(
-                ChessFactory.Logger<CheckDetectionService>(),
                 _playerStateServiceMock.Object,
                 _moveServiceMock.Object,
                 ChessFactory.FindAttackPaths(),

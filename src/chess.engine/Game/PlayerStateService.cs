@@ -4,7 +4,6 @@ using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
 using chess.engine.Movement;
-using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Game
 {
@@ -19,15 +18,12 @@ namespace chess.engine.Game
     // TODO: Badly need unit tests for this one.
     public class PlayerStateService : IPlayerStateService
     {
-        private ILogger<IPlayerStateService> _logger;
         private readonly IFindAttackPaths _pathFinder;
         private readonly IPathsValidator<ChessPieceEntity> _pathsValidator;
 
-        public PlayerStateService(ILogger<IPlayerStateService> logger, 
-            IFindAttackPaths findAttackPaths,
+        public PlayerStateService(IFindAttackPaths findAttackPaths,
             IPathsValidator<ChessPieceEntity> pathsValidator)
         {
-            _logger = logger;
             _pathFinder = findAttackPaths;
             _pathsValidator = pathsValidator;
         }

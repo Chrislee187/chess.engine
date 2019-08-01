@@ -8,7 +8,6 @@ using chess.engine.Extensions;
 using chess.engine.Game;
 using chess.engine.Movement;
 using chess.engine.tests.Builders;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -41,7 +40,7 @@ namespace chess.engine.tests.Movement
         [Test]
         public void ValidPath_should_return_validPath()
         {
-            var validator = new ChessPathValidator(NullLogger<ChessPathValidator>.Instance, _providerMock.Object);
+            var validator = new ChessPathValidator(_providerMock.Object);
             var path = new ChessPathBuilder().Build();
 
             validator.ValidatePath(BoardStateMock.Object, path);
@@ -52,7 +51,7 @@ namespace chess.engine.tests.Movement
         [Test]
         public void ValidPath_should_return_truncated_path_when_move_test_fails()
         {
-            var validator = new ChessPathValidator(NullLogger<ChessPathValidator>.Instance, _providerMock.Object);
+            var validator = new ChessPathValidator(_providerMock.Object);
             var path = new ChessPathBuilder().From("D2").To("D3").To("D4")
                 .To("D5", (int)DefaultActions.TakeOnly)
                 .Build();
@@ -82,7 +81,7 @@ namespace chess.engine.tests.Movement
             _providerMock.Setup(f => f.TryGetValue(It.IsAny<int>(), out _moveTests))
                 .Returns(false);
 
-            var validator = new ChessPathValidator(NullLogger<ChessPathValidator>.Instance, _providerMock.Object);
+            var validator = new ChessPathValidator(_providerMock.Object);
             var path = new ChessPathBuilder().Build();
             Should.Throw<Exception>(() => validator.ValidatePath(BoardStateMock.Object, path));
         }

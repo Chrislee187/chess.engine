@@ -6,13 +6,11 @@ using board.engine.Movement;
 using chess.engine.Entities;
 using chess.engine.Extensions;
 using chess.engine.SAN;
-using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Game
 {
     public class ChessGame
     {
-        private readonly ILogger<ChessGame> _logger;
         private readonly BoardEngine<ChessPieceEntity> _engine;
         private readonly ICheckDetectionService _checkDetectionService;
 
@@ -28,25 +26,20 @@ namespace chess.engine.Game
         public Colours CurrentPlayer => (Colours) _engine.CurrentPlayer;
 
         public ChessGame(
-            ILogger<ChessGame> logger,
             IBoardEngineProvider<ChessPieceEntity> boardEngineProvider,
             IBoardEntityFactory<ChessPieceEntity> entityFactory,
             ICheckDetectionService checkDetectionService
         )
-            : this(logger, boardEngineProvider, checkDetectionService, new ChessBoardSetup(entityFactory))
+            : this(boardEngineProvider, checkDetectionService, new ChessBoardSetup(entityFactory))
         {
         }
 
         public ChessGame(
-            ILogger<ChessGame> logger,
             IBoardEngineProvider<ChessPieceEntity> boardEngineProvider,
             ICheckDetectionService checkDetectionService,
             IBoardSetup<ChessPieceEntity> setup,
             Colours whoseTurn = Colours.White)
         {
-            _logger = logger;
-            _logger?.LogInformation("Initialising new chess game");
-
             _engine = boardEngineProvider.Provide(setup, (int) whoseTurn);
 
             _checkDetectionService = checkDetectionService;
@@ -56,14 +49,11 @@ namespace chess.engine.Game
 
         public string Move(string input)
         {
-            _logger?.LogDebug($"Attempting move {input}");
-
             if (!StandardAlgebraicNotation.TryParse(input, out var san))
             {
                 // TODO: More detailed error
                 return $"Error: invalid move {input}, are you using upper-case for Files?";
             }
-
 
             _sanMoveFinder = new SanMoveFinder(_engine.BoardState);
 

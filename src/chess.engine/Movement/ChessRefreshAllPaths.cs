@@ -5,21 +5,17 @@ using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
 using chess.engine.Game;
-using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Movement
 {
     public class ChessRefreshAllPaths : IRefreshAllPaths<ChessPieceEntity>
     {
-        private readonly ILogger _logger;
         private readonly ICheckDetectionService _checkDetectionService;
 
         public ChessRefreshAllPaths(
-            ILogger<ChessRefreshAllPaths> logger,
             ICheckDetectionService checkDetectionService
             )
         {
-            _logger = logger;
             _checkDetectionService = checkDetectionService;
         }
 
@@ -29,8 +25,6 @@ namespace chess.engine.Movement
 
         public void RefreshAllPaths(IBoardState<ChessPieceEntity> boardState, int currentPlayer)
         {
-            _logger?.LogDebug("Beginning ChessRefreshAllPaths process...");
-
             RefreshPathsFeature(boardState, (Colours) currentPlayer);
 
             // NOTE: IMPORTANT: Kings must be evaluated last to ensure that moves
@@ -45,7 +39,6 @@ namespace chess.engine.Movement
                 RemovePathsThatContainMovesThatLeaveUsInCheck(boardState, loc);
             }
 
-            _logger?.LogDebug($"ChessRefreshAllPaths process finished... {boardStateGetAllItemLocations.Count()} paths refreshed");
         }
 
         private void RefreshPathsFeature(IBoardState<ChessPieceEntity> boardState, Colours currentPlayer)

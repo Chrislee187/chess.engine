@@ -3,21 +3,16 @@ using board.engine;
 using board.engine.Board;
 using board.engine.Movement;
 using chess.engine.Entities;
-using Microsoft.Extensions.Logging;
 
 namespace chess.engine.Movement
 {
     public class ChessPathsValidator : IPathsValidator<ChessPieceEntity>
     {
         private readonly IPathValidator<ChessPieceEntity> _pathValidator;
-        private readonly ILogger<ChessPathsValidator> _logger;
 
-        public ChessPathsValidator(
-            ILogger<ChessPathsValidator> logger,
-            IPathValidator<ChessPieceEntity> pathValidator
+        public ChessPathsValidator(IPathValidator<ChessPieceEntity> pathValidator
             )
         {
-            _logger = logger;
             _pathValidator = pathValidator;
         }
 

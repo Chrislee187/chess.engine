@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using board.engine.Actions;
+﻿using board.engine.Actions;
 using board.engine.Board;
 
 namespace board.engine.Movement.Validators

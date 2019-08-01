@@ -7,121 +7,84 @@ using chess.engine.Extensions;
 using chess.engine.Movement;
 using chess.engine.Movement.King;
 using chess.engine.SAN;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace chess.engine.Game
 {
     public static class ChessFactory
     {
-        public enum LoggerType
-        {
-            Null, Injected
-        }
-
-        public static ILogger<T> Logger<T>(LoggerType type = LoggerType.Injected)
-        {
-            switch (type)
-            {
-                case LoggerType.Null:
-                    return NullLogger<T>.Instance;
-                case LoggerType.Injected:
-                    return AppContainer.GetService<ILogger<T>>();
-                default:
-                    Throw.InvalidArgument("Unsupported LoggerType", nameof(type));
-                    break;
-            }
-            Throw.InvalidArgument("Unsupported LoggerType", nameof(type));
-            return null;
-        }
-
-        public static ChessPieceEntityFactory ChessPieceEntityFactory(LoggerType logger = LoggerType.Injected)
+        public static ChessPieceEntityFactory ChessPieceEntityFactory()
             => new ChessPieceEntityFactory();
 
         public static IChessValidationSteps CastleValidationSteps()
             => new ChessValidationSteps();
-        public static ChessMoveValidationProvider MoveValidationProvider(LoggerType logger = LoggerType.Injected)
+        public static ChessMoveValidationProvider MoveValidationProvider()
             => new ChessMoveValidationProvider(CastleValidationSteps());
 
         public static ChessPathValidator PathValidator(
-            IMoveValidationProvider<ChessPieceEntity> moveValidationProvider = null,
-            LoggerType logger = LoggerType.Injected)
-            => new ChessPathValidator(
-                Logger<ChessPathValidator>(logger),
-                moveValidationProvider ?? MoveValidationProvider(logger)
+            IMoveValidationProvider<ChessPieceEntity> moveValidationProvider = null)
+            => new ChessPathValidator(moveValidationProvider ?? MoveValidationProvider()
             );
 
-        public static ChessPathsValidator PathsValidator(LoggerType logger = LoggerType.Injected,
-            IPathValidator<ChessPieceEntity> pathValidator = null
+        public static ChessPathsValidator PathsValidator(IPathValidator<ChessPieceEntity> pathValidator = null
         )
         {
-            return new ChessPathsValidator(
-                Logger<ChessPathsValidator>(logger),
-                pathValidator ?? PathValidator(null, logger)
+            return new ChessPathsValidator(pathValidator ?? PathValidator(null)
             );
         }
-        public static ChessRefreshAllPaths ChessRefreshAllPaths(LoggerType logger = LoggerType.Injected,
-            ChessBoardActionProvider chessBoardActionProvider = null
+        public static ChessRefreshAllPaths ChessRefreshAllPaths(ChessBoardActionProvider chessBoardActionProvider = null
             )
             => new ChessRefreshAllPaths(
-                Logger<ChessRefreshAllPaths>(logger),
-                CheckDetectionService(logger)
+                CheckDetectionService()
             );
 
-        public static IPlayerStateService PlayerStateService(LoggerType logger = LoggerType.Injected) 
-        => new PlayerStateService(Logger<IPlayerStateService>(logger),
-            FindAttackPaths(logger), PathsValidator(logger));
+        public static IPlayerStateService PlayerStateService() 
+        => new PlayerStateService(FindAttackPaths(), PathsValidator());
 
-        public static IFindAttackPaths FindAttackPaths(LoggerType logger = LoggerType.Injected)
+        public static IFindAttackPaths FindAttackPaths()
             => new FindAttackPaths();
-        public static ChessBoardActionProvider ChessBoardActionProvider(IBoardEntityFactory<ChessPieceEntity> entityFactory = null, LoggerType logger = LoggerType.Injected)
+        public static ChessBoardActionProvider ChessBoardActionProvider(IBoardEntityFactory<ChessPieceEntity> entityFactory = null)
             => new ChessBoardActionProvider(
-                entityFactory ?? ChessPieceEntityFactory(logger)
+                entityFactory ?? ChessPieceEntityFactory()
                 );
 
-        public static ChessGame NewChessGame(LoggerType logger = LoggerType.Injected)
+        public static ChessGame NewChessGame()
             => new ChessGame(
-                Logger<ChessGame>(logger),
-                ChessBoardEngineProvider(logger),
-                ChessPieceEntityFactory(logger),
-                CheckDetectionService(logger)
+                ChessBoardEngineProvider(),
+                ChessPieceEntityFactory(),
+                CheckDetectionService()
                 );
 
-        public static ChessGame CustomChessGame(IBoardSetup<ChessPieceEntity> setup, Colours toPlay = Colours.White, LoggerType logger = LoggerType.Injected) 
+        public static ChessGame CustomChessGame(IBoardSetup<ChessPieceEntity> setup, Colours toPlay = Colours.White) 
             => new ChessGame(
-                Logger<ChessGame>(logger),
-                ChessBoardEngineProvider(logger),
-                CheckDetectionService(logger),
+                ChessBoardEngineProvider(),
+                CheckDetectionService(),
                 setup,
                 toPlay
                 );
 
         public static IBoardMoveService<ChessPieceEntity> BoardMoveService(
             ChessBoardActionProvider boardActionProvider = null,
-            IBoardEntityFactory<ChessPieceEntity> entityFactory = null,
-            LoggerType logger = LoggerType.Injected
+            IBoardEntityFactory<ChessPieceEntity> entityFactory = null
             )
         {
             return new BoardMoveService<ChessPieceEntity>(
-                boardActionProvider ?? ChessBoardActionProvider(entityFactory, logger)
+                boardActionProvider ?? ChessBoardActionProvider(entityFactory)
                 );
         }
 
-        public static ChessBoardEngineProvider ChessBoardEngineProvider(LoggerType logger = LoggerType.Injected) =>
+        public static ChessBoardEngineProvider ChessBoardEngineProvider() =>
             new ChessBoardEngineProvider(
-                Logger<BoardEngine<ChessPieceEntity>>(logger),
-                ChessRefreshAllPaths(logger),
-                PathsValidator(logger),
-                BoardMoveService(null, null, logger));
+                ChessRefreshAllPaths(),
+                PathsValidator(),
+                BoardMoveService(null, null));
 
-        public static ICheckDetectionService CheckDetectionService(LoggerType logger = LoggerType.Injected)
+        public static ICheckDetectionService CheckDetectionService()
         {
             return new CheckDetectionService(
-                Logger<CheckDetectionService>(logger),
-                PlayerStateService(logger),
-                BoardMoveService(null, null, logger),
-                FindAttackPaths(logger),
-                PathsValidator(logger)
+                PlayerStateService(),
+                BoardMoveService(null, null),
+                FindAttackPaths(),
+                PathsValidator()
             );
         }
 

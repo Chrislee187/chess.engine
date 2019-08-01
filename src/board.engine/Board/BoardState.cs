@@ -78,16 +78,16 @@ namespace board.engine.Board
 
         public void RefreshPathsFor(IEnumerable<LocatedItem<TEntity>> items)
         {
-            if (FeatureFlags.ParalleliseRefreshAllPaths)
-            {
-                items.AsParallel()
-                    .ForAll(RegenerateValidatedPaths);
-            }
-            else
-            {
+//            if (FeatureFlags.ParalleliseRefreshAllPaths)
+//            {
+//                items.AsParallel()
+//                    .ForAll(RegenerateValidatedPaths);
+//            }
+//            else
+//            {
                 items.ToList()
                     .ForEach(RegenerateValidatedPaths);
-            }
+//            }
         }
 
         public void RegenerateValidatedPaths(int owner)
