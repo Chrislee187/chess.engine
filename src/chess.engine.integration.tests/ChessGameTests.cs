@@ -23,7 +23,7 @@ namespace chess.engine.integration.tests
         public void Move_should_update_current_player_when_valid()
         {
             var msg = _game.Move("d2d4");
-            Assert.That(_game.CurrentPlayer, Is.EqualTo(Colours.Black), msg);
+            Assert.AreEqual(_game.CurrentPlayer, Colours.Black);
         }
 
         [TestCase(Colours.White, 8)]

@@ -53,6 +53,8 @@ namespace board.engine
 
         #endregion
 
+        public string ToLan() => $"{(char)(64 + X)}{Y}";
+
 #if DEBUG
         public override string ToString()
         {

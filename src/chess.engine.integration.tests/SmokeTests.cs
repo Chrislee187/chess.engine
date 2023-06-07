@@ -2,6 +2,7 @@
 using chess.engine.Game;
 using chess.tests.utils.TestData;
 using NUnit.Framework;
+using Shouldly;
 
 namespace chess.engine.integration.tests
 {
@@ -15,11 +16,14 @@ namespace chess.engine.integration.tests
             foreach (var move in WikiGame.Moves)
             {
                 var msg = game.Move(move);
-                if (!string.IsNullOrEmpty(msg))
+                if (!string.IsNullOrEmpty(msg.Error) && msg.Error.StartsWith("Error"))
                 {
-                    if (msg.Contains("Error:")) Assert.Fail($"Error: {msg}");
+                    Assert.Fail($"Error: {msg.Error}");
                 }
+
+                Console.WriteLine(msg.Lan.ToString());
             }
+            game.CheckState.ShouldBe(GameCheckState.None); // NOTE: Example game ends in a draw
         }
         [Test]
         public void Should_play_to_fools_mate()
@@ -29,9 +33,9 @@ namespace chess.engine.integration.tests
             foreach (var move in moves)
             {
                 var msg = game.Move(move);
-                if (!string.IsNullOrEmpty(msg))
+                if (!string.IsNullOrEmpty(msg.Error) && msg.Error.StartsWith("Error"))
                 {
-                    if (msg.Contains("Error:")) Assert.Fail($"Error: {msg}");
+                    Assert.Fail($"Error: {msg}");
                 }
             }
 

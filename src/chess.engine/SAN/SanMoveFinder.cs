@@ -22,7 +22,7 @@ namespace chess.engine.SAN
             _boardState = boardState;
         }
 
-        public BoardMove Find(StandardAlgebraicNotation san, Colours forPlayer)
+        public BoardMove? Find(StandardAlgebraicNotation san, Colours forPlayer)
         {
             var t = san.ToNotation();
             if (san.CastleMove != StandardAlgebraicNotation.CastleSide.None)

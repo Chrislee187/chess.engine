@@ -47,25 +47,27 @@ namespace chess.engine.Game
             CheckState = _checkDetectionService.Check(BoardState);
         }
 
-        public string Move(string input)
+        public (string Lan, string Error) Move(string input)
         {
             if (!StandardAlgebraicNotation.TryParse(input, out var san))
             {
                 // TODO: More detailed error
-                return $"Error: invalid move {input}, are you using upper-case for Files?";
+                return ("",$"Error: invalid move {input}, are you using upper-case for Files?");
             }
 
             _sanMoveFinder = new SanMoveFinder(_engine.BoardState);
 
             var move = _sanMoveFinder.Find(san, (Colours) _engine.CurrentPlayer);
-
             if (move == null)
             {
-                return $"Error: No matching move found: {input}";
+                return ("", $"Error: No matching move found: {input}");
             }
+            var from = BoardLocation.At(move.From.X, move.From.Y);
+            var to = BoardLocation.At(move.To.X, move.To.Y);
+            var lan = $"{from.ToLan()}{to.ToLan()}";
 
-            var validMove = PlayValidMove(move);
-            return validMove;
+            var error = PlayValidMove(move);
+            return (lan, error);
 
         }
 

@@ -114,7 +114,7 @@ namespace chess.engine.integration.tests.Movement
             var boardState = buildGame.BoardState;
 
             var msg = buildGame.Move(_whiteKingSideCastle.ToChessCoords());
-            Assert.IsEmpty(msg, msg);
+            Assert.IsEmpty(msg.Error);
 
             Assert.False(boardState.IsEmpty("G1".ToBoardLocation()), $"No item at G1");
             var king = boardState.GetItem("G1".ToBoardLocation());

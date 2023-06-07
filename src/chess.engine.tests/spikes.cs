@@ -121,7 +121,7 @@ namespace chess.engine.tests
 
             var msg = game.Move("c4b5");
 
-            msg.ShouldBeEmpty();
+            msg.Error.ShouldBeEmpty();
         }
     }
 }

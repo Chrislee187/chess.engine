@@ -61,7 +61,7 @@ namespace spiker
                     }
                 } else if (!string.IsNullOrEmpty(input))
                 {
-                    lastResult = game.Move(input);
+                    lastResult = game.Move(input).Error;
                 }
             }
         }
