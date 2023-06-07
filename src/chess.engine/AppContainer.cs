@@ -47,6 +47,7 @@ namespace chess.engine
             services.AddTransient<IChessValidationSteps, ChessValidationSteps>();
             services.AddTransient<ISanBuilder, SanBuilder>();
 
+            services.AddTransient<ChessGame>();
             // NOTE: Acts as a cache, hence singleton usage
             services.AddSingleton<IFindAttackPaths, FindAttackPaths>();
 
